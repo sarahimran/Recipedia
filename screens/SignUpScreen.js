@@ -36,6 +36,19 @@ const SignUpScreen = ({ navigation }) => {
                     password
                 }
             );
+            console.log("object", res.data);
+            // if (res.data.header.error == 0) {
+            //     dispatch(setloginInfo(res.data.body.token));
+            //     dispatch(
+            //         setUserInfo({
+            //             name: res.data.body.firstName + " " + res.data.body.lastName,
+            //             email: res.data.body.email,
+            //         })
+            //     );
+            //     navigation.navigate("MyRecipeFeed");
+            // } else {
+            //     setWarning(res.data.header.message);
+            // }
         } catch (err) {
             console.log(err);
         }
@@ -48,7 +61,7 @@ const SignUpScreen = ({ navigation }) => {
                     <Text style={styles.logo}>SIGN UP</Text>
                 </ImageBackground>
                 <Text
-                    style={{ color: "#FF0000", alignSelf: "center", marginTop: "5%" }}
+                    style={{ color: "#FF0000", alignSelf: "center", marginTop: "13%" }}
                 >{warning}
                 </Text>
                 <Text style={styles.text}>Name</Text>
@@ -147,7 +160,7 @@ const styles = StyleSheet.create({
         fontSize: 38,
         alignSelf: "center",
         color: "#000000",
-      },
+    },
     text: {
         marginLeft: "15%",
         fontSize: 18,

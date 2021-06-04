@@ -9,11 +9,11 @@ import {
     Image,
     Text,
     ScrollView,
-    Dimensions
+    Dimensions,
+    TouchableOpacity
 } from 'react-native';
 import MaterialIcon from "react-native-vector-icons/MaterialIcons";
 import MaterialCommunityIcon from "react-native-vector-icons/MaterialCommunityIcons";
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useSelector } from "react-redux";
 import API_URL from '../config';
 
@@ -29,13 +29,13 @@ const SingleRecipeScreen = ({ route, navigation }) => {
         getRecipeFromApi();
     }, []);
 
-    var id_ = route.params.id;
-    var url = `${API_URL}/recipe/`;
-    var url_ = url.concat(id_);
+    // var id_ = route.params.id;
+    // var url = `${API_URL}/recipe/`;
+    // var url_ = url.concat(id_);
 
-    console.log("id",id_);
-    console.log(url_);
-    const id2 = id_;
+    // console.log("id",id_);
+    // console.log(url_);
+    // const id2 = id_;
 
     const saveRecipeAPI = async () => {
         try {
@@ -57,7 +57,7 @@ const SingleRecipeScreen = ({ route, navigation }) => {
     const getRecipeFromApi = async () => {
         try {
             const res = await axios.get(
-                url_,     
+              `${API_URL}/recipe/${route.params.id}`,     
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -69,8 +69,6 @@ const SingleRecipeScreen = ({ route, navigation }) => {
             console.log(err);
         }
     };
-
-    console.log("data", data.ingredients);
 
     const x = () => {
         return data.instructions.map((instruction, index) => {
@@ -91,7 +89,6 @@ const SingleRecipeScreen = ({ route, navigation }) => {
               name="arrow-back"
               size={20}
               style={styles.headerIcon}
-              onPress={() => navigation.goBack()}
             />
           </TouchableOpacity>
           <Text style={styles.headText}>{data.title}</Text>
@@ -150,12 +147,13 @@ const SingleRecipeScreen = ({ route, navigation }) => {
          
           <TouchableOpacity
             onPress={() => saveRecipeAPI()}
-            style={styles.signUp}
+            style={styles.btn}
           >
             <Text style={{ color: "white", fontWeight: "bold" }}>
               ADD TO SAVED RECIPES
             </Text>
           </TouchableOpacity>
+          {/* <View style={{height: 20}}/> */}
         </ScrollView>
       </SafeAreaView>
     );
@@ -166,23 +164,22 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingTop: Platform.OS == 'android' ? StatusBar.currentHeight : 0,
     },
-    signUp: {
-        shadowColor: 'rgba(0,0,0, .4)',
-        shadowOffset: { height: 1, width: 1 },
-        shadowOpacity: 1,
-        shadowRadius: 1,
-        backgroundColor: '#28c090',
-        elevation: 2,
-        height: 50,
-        width: 200,
-        top: 30,
-        justifyContent: 'center',
-        alignItems: 'center',
-        alignSelf: 'center',
-        position: 'absolute',
-        fontSize: 20,
-        borderRadius: 10,
-    
+    btn: {
+      fontSize: 20,
+      backgroundColor: "#28c090",
+      marginTop: "5%",
+      marginBottom: "5%",
+      borderWidth: 5,
+      borderTopWidth: 5,
+      borderColor: "#28c090",
+      color: "#FFFFFF",
+      borderRadius: 12,
+      textAlign: "center",
+      textAlignVertical: "center",
+      shadowColor: "#000000",
+      shadowOpacity: 0.8,
+      shadowRadius: 2,
+      alignSelf: "center",
     },
     header: {
         flexDirection: "row",
@@ -212,7 +209,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginTop: 15,
         margin: 12,
-        color: '#FF8C00',
+        color: '#888',
     },
     text: {
         fontSize: 20,

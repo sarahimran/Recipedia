@@ -14,27 +14,30 @@ import SimpleLineIcon from "react-native-vector-icons/SimpleLineIcons";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import API_URL from '../config';
+import { Keyboard } from "react-native";
 
-function EditNameScreen({ navigation }) {
+function EditNameScreen({ route, navigation }) {
   const token = useSelector((state) => state.login);
-  const [newname, setnewName] = useState("");
+  const [firstName, setFirstName] = useState(route.params.firstName);
+  const [lastName, setLastName] = useState(route.params.lastName);
   const [shadow, setShadow] = useState(true);
   const [warning, setWarning] = useState("");
 
-  const getProfileFromApi = async () => {
-    console.log("Api call working!");
+  const editProfileWithApi = async () => {
     try {
       const res = await axios.put(`${API_URL}/user/profile`,
-        { firstName: newname },
+        {
+          firstName: firstName,
+          lastName: lastName
+        },
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-      console.log(res.data);
       setWarning(res.data.header.message);
     } catch (err) {
-      console.log(err);
+      console.log(err.message);
     }
   };
 
@@ -47,25 +50,36 @@ function EditNameScreen({ navigation }) {
           style={styles.headerIcon}
           onPress={() => navigation.goBack()}
         />
-        <Text style={styles.headText}>Settings</Text>
+        <Text style={styles.headText}>Edit Name</Text>
       </View>
       <View style={styles.body}>
         <View style={styles.subHeading}>
           <Text style={styles.subheadText}>Change User Name</Text>
         </View>
+        {warning.length > 0 && <View><Text
+          style={{ color: "#FF0000", alignSelf: "center", marginBottom: "5%" }}
+        >{warning}
+        </Text></View>}
         <View style={styles.contentBox}>
-          <SimpleLineIcon name="user" size={20} style={styles.icon} />
-          <View style={{ flex: 5 }}>
-            <Text style={styles.field}>New Name</Text>
-            <TextInput
-              style={styles.input}
-              placeholder=""
-              placeholderTextColor="#808080"
-              onChangeText={(newname) => setnewName(newname)}
-            ></TextInput>
-          </View>
+          <Text style={styles.field}>First Name</Text>
+          <TextInput
+            style={styles.input}
+            placeholder=""
+            value={firstName}
+            placeholderTextColor="#808080"
+            onChangeText={(firstName) => setFirstName(firstName)}
+          ></TextInput>
         </View>
-
+        <View style={styles.contentBox}>
+          <Text style={styles.field}>Last Name</Text>
+          <TextInput
+            style={styles.input}
+            placeholder=""
+            value={lastName}
+            placeholderTextColor="#808080"
+            onChangeText={(lastName) => setLastName(lastName)}
+          ></TextInput>
+        </View>
         <Pressable onPressOut={() => setShadow(true)}>
           <Text
             style={[
@@ -79,24 +93,19 @@ function EditNameScreen({ navigation }) {
               },
             ]}
             onPress={(x) => {
+              Keyboard.dismiss();
               setWarning("");
               setShadow(false);
-              if (newname === "") {
+              if (firstName === "" || lastName === "") {
                 setWarning("incomplete details!");
               }
               else
-                getProfileFromApi();
+                editProfileWithApi();
             }}
           >
-            {" "}
-            SUBMIT{" "}
+            {" "}SUBMIT{" "}
           </Text>
         </Pressable>
-        <Text
-          style={{ color: "#FF0000", alignSelf: "center", marginTop: "5%" }}
-        >
-          {warning}
-        </Text>
       </View>
     </SafeAreaView>
   );
@@ -105,6 +114,7 @@ function EditNameScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#fff",
+    height: '100%',
     paddingTop: Platform.OS == "android" ? StatusBar.currentHeight : 0,
   },
   header: {
@@ -127,6 +137,7 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "bold",
     fontSize: 18,
+    marginLeft: 15
   },
   body: {
     paddingTop: 20,
@@ -134,7 +145,7 @@ const styles = StyleSheet.create({
   subHeading: {
     paddingLeft: 20,
     paddingBottom: 30,
-    marginBottom: 12,
+    marginBottom: 20,
     borderBottomWidth: 1,
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
@@ -150,32 +161,23 @@ const styles = StyleSheet.create({
     paddingLeft: 30,
     flexDirection: "row",
     alignItems: "center",
-    borderBottomWidth: 1,
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30,
-    borderBottomColor: "#eee",
-  },
-  icon: {
-    flex: 0.8,
-    color: "grey",
-  },
-  content: {
-    flex: 5,
   },
   field: {
     fontSize: 15,
     fontWeight: "bold",
     color: "orange",
+    width: 90,
+    marginRight: 20
   },
-  info: {
+  input: {
     fontSize: 15,
-  },
-  editIcon: {
-    flex: 1,
-    color: "lightgrey",
-  },
-  pwdContent: {
-    flex: 4,
+    borderWidth: 2,
+    borderColor: '#eee',
+    borderRadius: 8,
+    width: 180,
+    height: 40,
+    paddingLeft: 10,
+    textAlignVertical: 'center'
   },
   btn: {
     fontSize: 20,
@@ -193,10 +195,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowRadius: 2,
     alignSelf: "center",
-  },
-  input: {
-    fontSize: 15,
-    marginRight: 30,
   },
 });
 

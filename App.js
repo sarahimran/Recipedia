@@ -16,6 +16,7 @@ import mystore from "./src/store";
 import { Provider } from "react-redux";
 import { StatusBar } from "react-native";
 import { Platform } from "react-native";
+import SavedRecipesScreen from "./screens/SavedRecipesScreen";
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -24,31 +25,9 @@ export default function App() {
       <NavigationContainer>
         <Stack.Navigator
           initialRouteName="LandingPage"
-          screenOptions={({ route, navigation }) => ({
-            headerTitleStyle: {
-              color: "white",
-              fontWeight: "bold",
-            },
-            headerStatusBarHeight: 27,
+          screenOptions={{
             headerShown: false,
-            title: "Recipedia",
-            headerStyle: {
-              backgroundColor: "#28c090",
-              // height: 55,
-            },
-            headerLeft: () => (
-              <CustomMenu
-                menutext="Menu"
-                // menustyle={{
-                //   marginRight: 14,
-                // }}
-                textStyle={{ color: "white" }}
-                navigation={navigation}
-                route={route}
-                isIcon={true}
-              />
-            ),
-          })}
+          }}
         >
           <Stack.Screen name="SignIn" component={SignInScreen} />
           <Stack.Screen name="myRecipe" component={MyRecipeScreen} />
@@ -57,13 +36,9 @@ export default function App() {
           <Stack.Screen name="editPassword" component={EditPasswordScreen} />
           <Stack.Screen name="editName" component={EditNameScreen} />
           <Stack.Screen name="singleRecipe" component={SingleRecipeScreen} />
-          <Stack.Screen name="Menu" component={CustomMenu} />
-          <Stack.Screen
-            name="MyRecipeFeed"
-            component={MyRecipeFeed}
-            options={{ headerShown: true }}
-          />
+          <Stack.Screen name="MyRecipeFeed" component={MyRecipeFeed} />
           <Stack.Screen name="LandingPage" component={LandingPage} />
+          <Stack.Screen name="savedRecipes" component={SavedRecipesScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

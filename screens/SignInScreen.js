@@ -35,15 +35,18 @@ const SignInScreen = ({ navigation }) => {
           password,
         }
       );
-      setWarning(JSON.stringify(res.message));
-      dispatch(setloginInfo(res.data.body.token));
-      dispatch(
-        setUserInfo({
-          name: res.data.body.firstName + " " + res.data.body.lastName,
-          email: res.data.body.email,
-        })
-      );
-      navigation.navigate("MyRecipeFeed");
+      if (res.data.header.error == 0) {
+        dispatch(setloginInfo(res.data.body.token));
+        dispatch(
+          setUserInfo({
+            name: res.data.body.firstName + " " + res.data.body.lastName,
+            email: res.data.body.email,
+          })
+        );
+        navigation.navigate("MyRecipeFeed");
+      }else{
+        setWarning(res.data.header.message);
+      }
     } catch (err) {
       setWarning(JSON.stringify(err.message));
       console.log(err);
@@ -54,11 +57,10 @@ const SignInScreen = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <ScrollView>
         <ImageBackground source={img} style={styles.image}>
-          {/* <Text style={styles.logo}>RECIPEDIA</Text> */}
           <Text style={styles.logo}>SIGN IN</Text>
         </ImageBackground>
         <Text
-          style={{ color: "#FF0000", alignSelf: "center", marginTop: "10%" }}
+          style={{ color: "#FF0000", alignSelf: "center", marginTop: "13%" }}
         >
           {warning}
         </Text>
@@ -72,7 +74,7 @@ const SignInScreen = ({ navigation }) => {
           onChangeText={(email) => {
             setEmail(email);
           }}
-        ></TextInput>
+        />
         <Text style={styles.text}>Password</Text>
         <TextInput
           style={styles.input}
@@ -134,7 +136,7 @@ const styles = StyleSheet.create({
   },
   logo: {
     marginTop: "90%",
-    marginBottom: "13%",
+    marginBottom: "10%",
     fontWeight: "400",
     fontSize: 38,
     alignSelf: "center",
@@ -171,11 +173,6 @@ const styles = StyleSheet.create({
     shadowColor: "#000000",
     shadowOpacity: 0.8,
     shadowRadius: 2,
-    // shadowOffset: {
-    //   height: 1,
-    //   width: 1,
-    // },
-    // elevation: Platform.OS == 'android' ? 4 : 0,
   },
   link: {
     marginTop: "3%",

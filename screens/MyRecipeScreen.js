@@ -17,77 +17,73 @@ import axios from "axios";
 import img from "../assets/pasta.jpg";
 import { Rating } from "react-native-elements";
 import API_URL from '../config';
+import Header from "../components/Header";
+import RecipeBox from "../components/RecipeBox";
 
 const MyRecipeScreen = ({ navigation }) => {
   const [arr, setarr] = useState([]);
-  const [rat, setrat] = useState("");
   const token = useSelector((state) => state.login);
 
   useEffect(() => {
-    console.log("Api call working!");
-    getProfileFromApi();
+    getRecipesFromApi();
   }, []);
 
-  const getProfileFromApi = async () => {
-    let data = [];
-    console.log("Api call working!");
+  const getRecipesFromApi = async () => {
     try {
       const res = await axios.get(
-        `${API_URL}/recipe/myrecipes`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      const app = [];
-      console.log("Data from API", res.data.body);
+        `${API_URL}/recipe/myrecipes`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setarr(res.data.body);
     } catch (err) {
       console.log(err);
     }
   };
 
-  const Onebox = (props) => {
-    return (
-      <TouchableOpacity onPress={() => { navigation.navigate("singleRecipe", { id: props.idr }) }}>
-        <View style={styles.contentBox}>
-          <Image style={styles.imag} source={img} />
-          <View style={styles.content}>
-            <Text style={styles.subheadText}>{props.title}</Text>
-            <View style={styles.contentText}>
-              <Text style={styles.subHeading}>Duration: </Text>
-              <Text>{props.duration}</Text>
-            </View>
-            <View style={styles.ratingbox}>
-              {setrat(props.rating)}
-              <Text style={styles.subHeading}>Rating: </Text>
-              <Rating
-                imageSize={15}
-                readonly
-                startingValue={rat}
-              />
-            </View>
-            <View style={styles.contentText}>
-              <Text style={styles.subHeading}>Description: </Text>
-              <Text>{props.description.substring(0, 20)} </Text>
-            </View>
-            <Text>{props.description.substring(20, 40)}... </Text>
-          </View>
-        </View>
-      </TouchableOpacity>
-    );
-  };
+  // const Onebox = (props) => {
+  //   return (
+  //     <TouchableOpacity onPress={() => { navigation.navigate("singleRecipe", { id: props.idr }) }}>
+  //       <View style={styles.contentBox}>
+  //         <Image style={styles.imag} source={img} />
+  //         <View style={styles.content}>
+  //           <Text style={styles.subheadText}>{props.title}</Text>
+  //           <View style={styles.contentText}>
+  //             <Text style={styles.subHeading}>Duration: </Text>
+  //             <Text>{props.duration}</Text>
+  //           </View>
+  //           <View style={styles.ratingbox}>
+  //             {setrat(props.rating)}
+  //             <Text style={styles.subHeading}>Rating: </Text>
+  //             <Rating
+  //               imageSize={15}
+  //               readonly
+  //               startingValue={rat}
+  //             />
+  //           </View>
+  //           <View style={styles.contentText}>
+  //             <Text style={styles.subHeading}>Description: </Text>
+  //             <Text>{props.description.substring(0, 20)} </Text>
+  //           </View>
+  //           <Text>{props.description.substring(20, 40)}... </Text>
+  //         </View>
+  //       </View>
+  //     </TouchableOpacity>
+  //   );
+  // };
 
   const x = () => {
     return arr.map((a) => {
       return (
-        <Onebox
+        <RecipeBox
+          key={a._id}
           title={a.title}
           description={a.description}
           duration={a.duration}
           rating={a.rating}
-          idr={a._id}
+          navigation={navigation}
+          id={a._id}
         />
       );
     });
@@ -95,17 +91,9 @@ const MyRecipeScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <Header navigation={navigation} title={"My Recipes"}></Header>
       <ScrollView>
-        <View style={styles.header}>
-          <MaterialIcon
-            name="arrow-back"
-            size={20}
-            style={styles.headerIcon}
-            onPress={() => navigation.goBack()}
-          />
-          <Text style={styles.headText}>My recipes</Text>
-        </View>
-        <View>{x()}</View>
+        <View style={{ marginTop: 10 }}>{x()}</View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -114,6 +102,7 @@ const MyRecipeScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#fff",
+    height: '100%',
     paddingTop: Platform.OS == "android" ? StatusBar.currentHeight : 0,
   },
   header: {

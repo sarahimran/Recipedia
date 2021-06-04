@@ -14,6 +14,7 @@ import SimpleLineIcon from "react-native-vector-icons/SimpleLineIcons";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import API_URL from '../config';
+import { Keyboard } from "react-native";
 
 function EditPasswordScreen({ navigation }) {
   const token = useSelector((state) => state.login);
@@ -22,7 +23,7 @@ function EditPasswordScreen({ navigation }) {
   const [shadow, setShadow] = useState(true);
   const [warning, setWarning] = useState("");
 
-  const getProfileFromApi = async () => {
+  const editPasswordWithApi = async () => {
     console.log("Api call working!");
     try {
       const res = await axios.put(`${API_URL}/user/profile`,
@@ -30,14 +31,14 @@ function EditPasswordScreen({ navigation }) {
           oldPassword: oldpassword,
           newPassword: newpassword,
         }, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       console.log(res.data);
       setWarning(res.data.header.message);
     } catch (err) {
-      console.log(err);
+      console.log(err.message);
     }
   };
 
@@ -50,37 +51,36 @@ function EditPasswordScreen({ navigation }) {
           style={styles.headerIcon}
           onPress={() => navigation.goBack()}
         />
-        <Text style={styles.headText}>Settings</Text>
+        <Text style={styles.headText}>Edit Password</Text>
       </View>
       <View style={styles.body}>
         <View style={styles.subHeading}>
           <Text style={styles.subheadText}>Change Password</Text>
         </View>
+        {warning.length > 0 && <Text
+          style={{ color: "#FF0000", alignSelf: "center", marginBottom: "5%" }}
+        >
+          {warning}
+        </Text>}
         <View style={styles.contentBox}>
-          <SimpleLineIcon name="lock" size={20} style={styles.icon} />
-          <View style={{ flex: 5 }}>
-            <Text style={styles.field}>Old password</Text>
-            <TextInput
-              style={styles.input}
-              secureTextEntry
-              placeholder="******"
-              placeholderTextColor="#808080"
-              onChangeText={(oldpassword) => setoldPassword(oldpassword)}
-            ></TextInput>
-          </View>
+          <Text style={styles.field}>Old password</Text>
+          <TextInput
+            style={styles.input}
+            secureTextEntry
+            placeholder="******"
+            placeholderTextColor="#808080"
+            onChangeText={(oldpassword) => setoldPassword(oldpassword)}
+          ></TextInput>
         </View>
         <View style={styles.contentBox}>
-          <SimpleLineIcon name="lock" size={20} style={styles.icon} />
-          <View style={{ flex: 5 }}>
-            <Text style={styles.field}>New Password</Text>
-            <TextInput
-              style={styles.input}
-              secureTextEntry
-              placeholder="******"
-              placeholderTextColor="#808080"
-              onChangeText={(newpassword) => setnewPassword(newpassword)}
-            ></TextInput>
-          </View>
+          <Text style={styles.field}>New Password</Text>
+          <TextInput
+            style={styles.input}
+            secureTextEntry
+            placeholder="******"
+            placeholderTextColor="#808080"
+            onChangeText={(newpassword) => setnewPassword(newpassword)}
+          ></TextInput>
         </View>
         <Pressable onPressOut={() => setShadow(true)}>
           <Text
@@ -95,6 +95,7 @@ function EditPasswordScreen({ navigation }) {
               },
             ]}
             onPress={(x) => {
+              Keyboard.dismiss();
               setWarning("");
               setShadow(false);
               if (oldpassword === "" || newpassword === "") {
@@ -103,18 +104,12 @@ function EditPasswordScreen({ navigation }) {
                 setWarning("password too short enter atleast 8 characters");
               }
               else
-                getProfileFromApi();
+                editPasswordWithApi();
             }}
           >
-            {" "}
-            SUBMIT{" "}
+            {" "}SUBMIT{" "}
           </Text>
         </Pressable>
-        <Text
-          style={{ color: "#FF0000", alignSelf: "center", marginTop: "5%" }}
-        >
-          {warning}
-        </Text>
       </View>
     </SafeAreaView>
   );
@@ -123,6 +118,7 @@ function EditPasswordScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#fff",
+    height: '100%',
     paddingTop: Platform.OS == "android" ? StatusBar.currentHeight : 0,
   },
   header: {
@@ -145,6 +141,7 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "bold",
     fontSize: 18,
+    marginLeft: 15
   },
   body: {
     paddingTop: 20,
@@ -168,32 +165,23 @@ const styles = StyleSheet.create({
     paddingLeft: 30,
     flexDirection: "row",
     alignItems: "center",
-    borderBottomWidth: 1,
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30,
-    borderBottomColor: "#eee",
-  },
-  icon: {
-    flex: 0.8,
-    color: "grey",
-  },
-  content: {
-    flex: 5,
   },
   field: {
     fontSize: 15,
     fontWeight: "bold",
     color: "orange",
+    width: 90,
+    marginRight: 20
   },
-  info: {
+  input: {
     fontSize: 15,
-  },
-  editIcon: {
-    flex: 1,
-    color: "lightgrey",
-  },
-  pwdContent: {
-    flex: 4,
+    borderWidth: 2,
+    borderColor: '#eee',
+    borderRadius: 8,
+    width: 180,
+    height: 40,
+    paddingLeft: 10,
+    textAlignVertical: 'center'
   },
   btn: {
     fontSize: 20,
@@ -211,10 +199,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowRadius: 2,
     alignSelf: "center",
-  },
-  input: {
-    fontSize: 15,
-    marginRight: 30,
   },
 });
 

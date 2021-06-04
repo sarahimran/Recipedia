@@ -1,8 +1,6 @@
 import isloggedReducer from './loggedin';
-import {combineReducers} from 'redux';
+import { combineReducers } from 'redux';
 import SetInfoReducer from './setUserInfo';
-
-
 
 const allreducers = combineReducers({
   login: isloggedReducer,

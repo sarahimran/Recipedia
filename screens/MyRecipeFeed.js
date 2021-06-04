@@ -7,72 +7,95 @@ import axios from "axios";
 import img from "../assets/pasta.jpg";
 import { useSelector } from "react-redux";
 import API_URL from '../config';
+import Header from "../components/Header";
+import RecipeBox from "../components/RecipeBox";
 
-const height = Dimensions.get('window').height;
-const width = Dimensions.get('window').width;
-
-const MyRecipeFeed = ({ route, navigation }) => {
+const MyRecipeFeed = ({ navigation }) => {
     const token = useSelector((state) => state.login);
     const [data, setData] = useState([]);
+    
     useEffect(() => {
         getRecipesFromApi();
     }, []);
 
     const getRecipesFromApi = async () => {
-        console.log("Api call working!");
         try {
-            const res = await axios.get(`${API_URL}/recipe`, {
+            const res = await axios.get(
+                `${API_URL}/recipe`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            setData(res.data);
+            setData(res.data.body);
         } catch (err) {
             console.log(err);
         }
     };
 
-    let _menu = null;
+    const x = () => {
+        return data.map((a) => {
+            return (
+                <RecipeBox
+                    key={a._id}
+                    title={a.title}
+                    description={a.description}
+                    duration={a.duration}
+                    rating={a.rating}
+                    navigation={navigation}
+                    id={a._id}
+                />
+            );
+        });
+    };
+
     return (
+        // <SafeAreaView style={styles.container}>
+        //     <Header navigation={navigation} title={"Recipe Feed"}></Header>
+        //     <ScrollView>
+        //         {data.body && data.body.map((recipe) => {
+        //             return (
+        //                 <TouchableOpacity key={recipe._id} onPress={() => navigation.navigate("singleRecipe", { id: recipe._id })}>
+        //                     <View style={styles.contentBox}>
+        //                         <Image style={styles.imag} source={img} />
+        //                         <View style={styles.content}>
+        //                             <Text style={styles.subheadText}>{recipe.title}</Text>
+        //                             <View style={styles.contentText}>
+        //                                 <Text style={styles.subHeading}>Duration: </Text>
+        //                                 <Text>{recipe.duration} minutes</Text>
+        //                             </View>
+        //                             <View style={styles.ratingbox}>
+        //                                 <MaterialIcon name="star" size={20} style={styles.iconRating} />
+        //                                 <MaterialIcon name="star" size={20} style={styles.iconRating} />
+        //                                 <MaterialIcon name="star" size={20} style={styles.iconRating} />
+        //                                 <MaterialIcon name="star" size={20} style={styles.iconRating} />
+        //                                 <MaterialIcon name="star" size={20} style={styles.iconRating} />
+        //                             </View>
+        //                             <View style={styles.contentText}>
+        //                                 <Text style={styles.subHeading}>Description: </Text>
+        //                                 <Text numberOfLines={2} ellipsizeMode="tail">{recipe.description}</Text>
+        //                             </View>
+        //                         </View>
+        //                     </View>
+        //                 </TouchableOpacity>
+        //             );
+        //         })}
+        //     </ScrollView>
+        // </SafeAreaView>
         <SafeAreaView style={styles.container}>
+            <Header navigation={navigation} title={"Recipe Feed"}></Header>
             <ScrollView>
-                {data.body && data.body.map((recipe) => {
-                    return (
-                        <TouchableOpacity key={recipe._id} onPress={() => navigation.navigate("singleRecipe", { id: recipe._id })}>
-                            <View style={styles.contentBox}>
-                                <Image style={styles.imag} source={img} />
-                                <View style={styles.content}>
-                                    <Text style={styles.subheadText}>{recipe.title}</Text>
-                                    <View style={styles.contentText}>
-                                        <Text style={styles.subHeading}>Duration: </Text>
-                                        <Text>{recipe.duration} minutes</Text>
-                                    </View>
-                                    <View style={styles.ratingbox}>
-                                        <MaterialIcon name="star" size={20} style={styles.iconRating} />
-                                        <MaterialIcon name="star" size={20} style={styles.iconRating} />
-                                        <MaterialIcon name="star" size={20} style={styles.iconRating} />
-                                        <MaterialIcon name="star" size={20} style={styles.iconRating} />
-                                        <MaterialIcon name="star" size={20} style={styles.iconRating} />
-                                    </View>
-                                    <View style={styles.contentText}>
-                                        <Text style={styles.subHeading}>Description: </Text>
-                                        <Text numberOfLines={2} ellipsizeMode="tail">{recipe.description}</Text>
-                                    </View>
-                                </View>
-                            </View>
-                        </TouchableOpacity>
-                    );
-                })}
+                <View style={{ marginTop: 10 }}>{x()}</View>
             </ScrollView>
         </SafeAreaView>
     );
 };
 
 const styles = StyleSheet.create({
-    // container: {
-    //     backgroundColor: "#fff",
-    //     paddingTop: Platform.OS == "android" ? StatusBar.currentHeight : 0,
-    // },
+    container: {
+        backgroundColor: "#fff",
+        height: '100%',
+        paddingTop: Platform.OS == "android" ? StatusBar.currentHeight : 0,
+    },
     header: {
         flexDirection: "row",
         backgroundColor: "#28c090",
@@ -89,6 +112,7 @@ const styles = StyleSheet.create({
         paddingRight: 10,
     },
     headText: {
+        fontFamily: "Roboto",
         color: "#fff",
         fontWeight: "bold",
         fontSize: 18,
@@ -102,20 +126,19 @@ const styles = StyleSheet.create({
     },
     subheadText: {
         fontSize: 17,
-        color: "#28c090",
-        fontWeight: "bold",
+        color: "#0d5588",
     },
     contentBox: {
         flex: 1,
-        borderColor: "orange",
+        borderColor: "#E0E0E0",
         marginTop: "5%",
         borderWidth: 2,
         width: "90%",
         borderRadius: 12,
         alignSelf: "center",
-        height: 160,
+        height: 140,
         marginBottom: 20,
-        paddingBottom: 40,
+        paddingBottom: 10,
         paddingTop: 10,
         paddingLeft: 20,
         paddingRight: 20,
@@ -127,7 +150,7 @@ const styles = StyleSheet.create({
         color: "grey",
     },
     iconRating: {
-        color: "black",
+        color: "grey",
     },
     content: {
         alignSelf: "baseline",
@@ -136,8 +159,7 @@ const styles = StyleSheet.create({
     },
     contentText: {
         alignSelf: "baseline",
-        fontSize: 15,
-        width: width * 0.5,
+        flexDirection: "row",
     },
     ratingbox: {
         flexDirection: "row",
@@ -161,23 +183,6 @@ const styles = StyleSheet.create({
         height: 100,
         width: 100,
         marginRight: 20,
-    },
-    signUp: {
-        shadowColor: 'rgba(0,0,0, .4)',
-        shadowOffset: { height: 1, width: 1 },
-        shadowOpacity: 1,
-        shadowRadius: 1,
-        backgroundColor: 'orange',
-        elevation: 2,
-        height: 50,
-        width: 100,
-        justifyContent: 'center',
-        alignItems: 'center',
-        alignSelf: 'center',
-        position: 'absolute',
-        top: height * 0.38,
-        fontSize: 20,
-        borderRadius: 10
     },
 });
 

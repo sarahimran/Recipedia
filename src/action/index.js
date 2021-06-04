@@ -1,8 +1,8 @@
 export const setUserInfo = (profile) => {
- return {
-   type: "setUserInfo",
-   profile,
- };
+  return {
+    type: "setUserInfo",
+    profile,
+  };
 };
 
 export const setloginInfo = (token) => {
@@ -11,6 +11,10 @@ export const setloginInfo = (token) => {
     token,
   };
 };
+
+// export const signout = () => (dispatch) => {
+//   dispatch({ type: USER_SIGNOUT });
+// };
 
 
 

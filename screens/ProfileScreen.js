@@ -7,52 +7,44 @@ import { useEffect } from 'react';
 import axios from 'axios';
 import { useSelector } from "react-redux";
 import API_URL from '../config';
+import Header from "../components/Header";
 
 function ProfileScreen({ route, navigation }) {
   const token = useSelector((state) => state.login);
+  const [email, setEmail] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+
   useEffect(() => {
-    console.log("Api call working!");
     getProfileFromApi();
   }, []);
 
   const getProfileFromApi = async () => {
-    console.log("Api call working!");
     try {
       const res = await axios.get(`${API_URL}/user/profile`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
       });
-      console.log(res.data);
       setEmail(res.data.body.email);
-      setname(res.data.body.firstName.concat(" ").concat(res.data.body.lastName));
+      setFirstName(res.data.body.firstName)
+      setLastName(res.data.body.lastName);
     } catch (err) {
       console.log(err);
     }
   };
 
   const editNameHandler = () => {
-    navigation.navigate("editName", route.params);
+    navigation.navigate("editName", { firstName, lastName });
   };
 
   const editPasswordHandler = () => {
     navigation.navigate('editPassword', route.params);
   };
 
-  const [email, setEmail] = useState("");
-  const [name, setname] = useState("");
-
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <MaterialIcon
-          name="arrow-back"
-          size={20}
-          style={styles.headerIcon}
-          onPress={() => navigation.goBack()}
-        />
-        <Text style={styles.headText}>Settings</Text>
-      </View>
+      <Header navigation={navigation} title={"Settings"}></Header>
       <View style={styles.body}>
         <View style={styles.subHeading}>
           <Text style={styles.subheadText}>Profile</Text>
@@ -61,7 +53,7 @@ function ProfileScreen({ route, navigation }) {
           <SimpleLineIcon name="user" size={20} style={styles.icon} />
           <View style={{ flex: 4 }}>
             <Text style={styles.field}>Name</Text>
-            <Text style={styles.info}>{name}</Text>
+            <Text style={styles.info}>{firstName}{" "}{lastName}</Text>
           </View>
           <MaterialIcon
             name="edit"
@@ -98,6 +90,7 @@ function ProfileScreen({ route, navigation }) {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#fff",
+    height: '100%',
     paddingTop: Platform.OS == "android" ? StatusBar.currentHeight : 0,
   },
   header: {
