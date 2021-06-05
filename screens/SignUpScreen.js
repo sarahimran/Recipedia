@@ -39,18 +39,20 @@ const SignUpScreen = ({ navigation }) => {
                     password
                 }
             );
-            console.log("object", res.data.body);
             if (res.data.header.error == 0) {
+                setWarning(res.data.header.message);
                 dispatch(setloginInfo(res.data.body.token));
                 dispatch(
                     setUserInfo({
-                        name: res.data.body.firstName + " " + res.data.body.lastName,
+                        firstName: res.data.body.firstName,
+                        lastName: res.data.body.lastName,
                         email: res.data.body.email,
                     })
                 );
                 navigation.navigate("MyRecipeFeed");
+            } else {
+                setWarning(res.data.header.message);
             }
-            setWarning(res.data.header.message);
         } catch (err) {
             console.log(err);
         }

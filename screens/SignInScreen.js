@@ -39,7 +39,8 @@ const SignInScreen = ({ navigation }) => {
         dispatch(setloginInfo(res.data.body.token));
         dispatch(
           setUserInfo({
-            name: res.data.body.firstName + " " + res.data.body.lastName,
+            firstName: res.data.body.firstName,
+            lastName: res.data.body.lastName,
             email: res.data.body.email,
           })
         );

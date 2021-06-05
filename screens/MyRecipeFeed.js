@@ -12,6 +12,7 @@ import RecipeBox from "../components/RecipeBox";
 
 const MyRecipeFeed = ({ navigation }) => {
     const token = useSelector((state) => state.login);
+    const { firstName } = useSelector((state) => state.info);
     const [data, setData] = useState([]);
 
     useEffect(() => {
@@ -26,8 +27,7 @@ const MyRecipeFeed = ({ navigation }) => {
                     'Authorization': `Bearer ${token}`,
                 },
             });
-            if (res.data.header.error == 0)
-                setData(res.data.body);
+            setData(res.data.body);
         } catch (err) {
             console.log(err);
         }
@@ -51,7 +51,7 @@ const MyRecipeFeed = ({ navigation }) => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <Header navigation={navigation} title={"Recipe Feed"}></Header>
+            <Header navigation={navigation} title={`${firstName}'s Feed`}></Header>
             {data !== undefined ? <ScrollView>
                 <View style={{ marginTop: 10 }}>{x()}</View>
             </ScrollView> : <Text

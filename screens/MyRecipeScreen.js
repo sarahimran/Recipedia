@@ -42,37 +42,6 @@ const MyRecipeScreen = ({ navigation }) => {
     }
   };
 
-  // const Onebox = (props) => {
-  //   return (
-  //     <TouchableOpacity onPress={() => { navigation.navigate("singleRecipe", { id: props.idr }) }}>
-  //       <View style={styles.contentBox}>
-  //         <Image style={styles.imag} source={img} />
-  //         <View style={styles.content}>
-  //           <Text style={styles.subheadText}>{props.title}</Text>
-  //           <View style={styles.contentText}>
-  //             <Text style={styles.subHeading}>Duration: </Text>
-  //             <Text>{props.duration}</Text>
-  //           </View>
-  //           <View style={styles.ratingbox}>
-  //             {setrat(props.rating)}
-  //             <Text style={styles.subHeading}>Rating: </Text>
-  //             <Rating
-  //               imageSize={15}
-  //               readonly
-  //               startingValue={rat}
-  //             />
-  //           </View>
-  //           <View style={styles.contentText}>
-  //             <Text style={styles.subHeading}>Description: </Text>
-  //             <Text>{props.description.substring(0, 20)} </Text>
-  //           </View>
-  //           <Text>{props.description.substring(20, 40)}... </Text>
-  //         </View>
-  //       </View>
-  //     </TouchableOpacity>
-  //   );
-  // };
-
   const x = () => {
     return arr.map((a) => {
       return (

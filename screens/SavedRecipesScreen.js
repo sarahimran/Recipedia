@@ -33,8 +33,7 @@ const SavedRecipesScreen = ({ navigation }) => {
           },
         }
       );
-      if (res.data.header.error == 0)
-        setarr(res.data.body);
+      setarr(res.data.body);
     } catch (err) {
       console.log(err);
     }
@@ -65,7 +64,7 @@ const SavedRecipesScreen = ({ navigation }) => {
         style={{ color: "#FF0000", alignSelf: "center", margin: "5%" }}
       >
         You do not have any saved recipes!
-    </Text>}
+      </Text>}
     </SafeAreaView>
   );
 };
