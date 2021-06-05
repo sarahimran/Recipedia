@@ -67,13 +67,7 @@ const styles = StyleSheet.create({
     },
     timeBox: {
         flexDirection: "row",
-        // alignItems: 'center',
-        // marginRight: 10
     },
-    // ratingbox: {
-    //     justifyContent: 'center',
-    //     marginRight: 10
-    // },
 });
 
 export default RecipeBox;

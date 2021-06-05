@@ -12,9 +12,12 @@ export const setloginInfo = (token) => {
   };
 };
 
-// export const signout = () => (dispatch) => {
-//   dispatch({ type: USER_SIGNOUT });
-// };
+export const signout = (token) => {
+  return {
+    type: "loggedin",
+    token,
+  };
+};
 
 
 

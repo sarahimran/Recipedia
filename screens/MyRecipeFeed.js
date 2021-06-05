@@ -23,7 +23,7 @@ const MyRecipeFeed = ({ navigation }) => {
             const res = await axios.get(
                 `${API_URL}/recipe`, {
                 headers: {
-                    Authorization: `Bearer ${token}`,
+                    'Authorization': `Bearer ${token}`,
                 },
             });
             setData(res.data.body);
@@ -49,38 +49,6 @@ const MyRecipeFeed = ({ navigation }) => {
     };
 
     return (
-        // <SafeAreaView style={styles.container}>
-        //     <Header navigation={navigation} title={"Recipe Feed"}></Header>
-        //     <ScrollView>
-        //         {data.body && data.body.map((recipe) => {
-        //             return (
-        //                 <TouchableOpacity key={recipe._id} onPress={() => navigation.navigate("singleRecipe", { id: recipe._id })}>
-        //                     <View style={styles.contentBox}>
-        //                         <Image style={styles.imag} source={img} />
-        //                         <View style={styles.content}>
-        //                             <Text style={styles.subheadText}>{recipe.title}</Text>
-        //                             <View style={styles.contentText}>
-        //                                 <Text style={styles.subHeading}>Duration: </Text>
-        //                                 <Text>{recipe.duration} minutes</Text>
-        //                             </View>
-        //                             <View style={styles.ratingbox}>
-        //                                 <MaterialIcon name="star" size={20} style={styles.iconRating} />
-        //                                 <MaterialIcon name="star" size={20} style={styles.iconRating} />
-        //                                 <MaterialIcon name="star" size={20} style={styles.iconRating} />
-        //                                 <MaterialIcon name="star" size={20} style={styles.iconRating} />
-        //                                 <MaterialIcon name="star" size={20} style={styles.iconRating} />
-        //                             </View>
-        //                             <View style={styles.contentText}>
-        //                                 <Text style={styles.subHeading}>Description: </Text>
-        //                                 <Text numberOfLines={2} ellipsizeMode="tail">{recipe.description}</Text>
-        //                             </View>
-        //                         </View>
-        //                     </View>
-        //                 </TouchableOpacity>
-        //             );
-        //         })}
-        //     </ScrollView>
-        // </SafeAreaView>
         <SafeAreaView style={styles.container}>
             <Header navigation={navigation} title={"Recipe Feed"}></Header>
             <ScrollView>

@@ -13,10 +13,13 @@ import {
     Platform,
     StatusBar
 } from "react-native";
+import { useDispatch } from "react-redux";
 import img from "../assets/signinimager.png";
+import { setUserInfo, setloginInfo } from "../src/action/index";
 import API_URL from '../config';
 
 const SignUpScreen = ({ navigation }) => {
+    const dispatch = useDispatch();
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -37,18 +40,18 @@ const SignUpScreen = ({ navigation }) => {
                 }
             );
             console.log("object", res.data);
-            // if (res.data.header.error == 0) {
-            //     dispatch(setloginInfo(res.data.body.token));
-            //     dispatch(
-            //         setUserInfo({
-            //             name: res.data.body.firstName + " " + res.data.body.lastName,
-            //             email: res.data.body.email,
-            //         })
-            //     );
-            //     navigation.navigate("MyRecipeFeed");
-            // } else {
-            //     setWarning(res.data.header.message);
-            // }
+            if (res.data.header.error == 0) {
+                dispatch(setloginInfo(res.data.body.token));
+                dispatch(
+                    setUserInfo({
+                        name: res.data.body.firstName + " " + res.data.body.lastName,
+                        email: res.data.body.email,
+                    })
+                );
+                navigation.navigate("MyRecipeFeed");
+            } else {
+                setWarning(res.data.header.message);
+            }
         } catch (err) {
             console.log(err);
         }
@@ -61,10 +64,10 @@ const SignUpScreen = ({ navigation }) => {
                     <Text style={styles.logo}>SIGN UP</Text>
                 </ImageBackground>
                 <Text
-                    style={{ color: "#FF0000", alignSelf: "center", marginTop: "13%" }}
+                    style={{ color: "#FF0000", alignSelf: "center", marginTop: "13%", marginBottom:'2%' }}
                 >{warning}
                 </Text>
-                <Text style={styles.text}>Name</Text>
+                <Text style={styles.text}>Full Name</Text>
                 <TextInput
                     style={styles.input}
                     placeholderTextColor="#808080"

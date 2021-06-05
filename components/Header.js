@@ -4,9 +4,12 @@ import { Platform, View, Text, TouchableOpacity } from 'react-native';
 import { StyleSheet } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import Menu, { MenuItem, MenuDivider } from 'react-native-material-menu';
+import { signout } from "../src/action/index";
+import { useDispatch } from "react-redux";
 
 function Header({ navigation, title }) {
     let _menu = null;
+    const dispatch = useDispatch();
     return (
         <View style={styles.header}>
             <Menu
@@ -52,6 +55,7 @@ function Header({ navigation, title }) {
                 <MenuDivider />
                 <MenuItem onPress={() => {
                     _menu.hide();
+                    dispatch(signout(null));
                     navigation.navigate("SignIn")
                 }}>Log Out</MenuItem>
             </Menu>
