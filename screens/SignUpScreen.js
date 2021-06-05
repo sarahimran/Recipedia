@@ -20,7 +20,8 @@ import API_URL from '../config';
 
 const SignUpScreen = ({ navigation }) => {
     const dispatch = useDispatch();
-    const [name, setName] = useState("");
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [Confirmpassword, setConfirmedPassword] = useState("");
@@ -30,7 +31,6 @@ const SignUpScreen = ({ navigation }) => {
 
     const insertUser = async () => {
         try {
-            const [firstName, lastName] = name.split(" ");
             const res = await axios.post(`${API_URL}/user/signup`,
                 {
                     firstName,
@@ -39,7 +39,7 @@ const SignUpScreen = ({ navigation }) => {
                     password
                 }
             );
-            console.log("object", res.data);
+            console.log("object", res.data.body);
             if (res.data.header.error == 0) {
                 dispatch(setloginInfo(res.data.body.token));
                 dispatch(
@@ -49,9 +49,8 @@ const SignUpScreen = ({ navigation }) => {
                     })
                 );
                 navigation.navigate("MyRecipeFeed");
-            } else {
-                setWarning(res.data.header.message);
             }
+            setWarning(res.data.header.message);
         } catch (err) {
             console.log(err);
         }
@@ -64,7 +63,7 @@ const SignUpScreen = ({ navigation }) => {
                     <Text style={styles.logo}>SIGN UP</Text>
                 </ImageBackground>
                 <Text
-                    style={{ color: "#FF0000", alignSelf: "center", marginTop: "13%", marginBottom:'2%' }}
+                    style={{ color: "#FF0000", alignSelf: "center", marginTop: "13%", marginBottom: '2%' }}
                 >{warning}
                 </Text>
                 <Text style={styles.text}>Full Name</Text>
@@ -73,7 +72,9 @@ const SignUpScreen = ({ navigation }) => {
                     placeholderTextColor="#808080"
                     placeholder="Name"
                     onChangeText={(name) => {
-                        setName(name);
+                        const [fName, lName] = name.split(" ");
+                        setFirstName(fName);
+                        setLastName(lName);
                     }}
                 ></TextInput>
                 <Text style={styles.text}>Email</Text>
@@ -111,7 +112,8 @@ const SignUpScreen = ({ navigation }) => {
                             onPress={(x) => {
                                 setWarning("");
                                 if (
-                                    name === "" ||
+                                    firstName === "" ||
+                                    lastName === "" ||
                                     password === "" ||
                                     email === "" ||
                                     Confirmpassword === ""

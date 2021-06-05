@@ -26,14 +26,15 @@ const SavedRecipesScreen = ({ navigation }) => {
   const getRecipesFromApi = async () => {
     try {
       const res = await axios.get(
-        `${API_URL}/recipe/myrecipes`,
+        `${API_URL}/favorite/`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      setarr(res.data.body);
+      if (res.data.header.error == 0)
+        setarr(res.data.body);
     } catch (err) {
       console.log(err);
     }
@@ -58,9 +59,13 @@ const SavedRecipesScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <Header navigation={navigation} title={"Saved Recipes"}></Header>
-      <ScrollView>
+      {arr !== undefined ? <ScrollView>
         <View style={{ marginTop: 10 }}>{x()}</View>
-      </ScrollView>
+      </ScrollView> : <Text
+        style={{ color: "#FF0000", alignSelf: "center", margin: "5%" }}
+      >
+        You do not have any saved recipes!
+    </Text>}
     </SafeAreaView>
   );
 };

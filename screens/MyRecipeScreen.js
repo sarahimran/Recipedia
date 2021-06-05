@@ -92,9 +92,13 @@ const MyRecipeScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <Header navigation={navigation} title={"My Recipes"}></Header>
-      <ScrollView>
+      {arr !== undefined ? <ScrollView>
         <View style={{ marginTop: 10 }}>{x()}</View>
-      </ScrollView>
+      </ScrollView> : <Text
+        style={{ color: "#FF0000", alignSelf: "center", margin: "5%" }}
+      >
+        No recipes to show!
+      </Text>}
     </SafeAreaView>
   );
 };
