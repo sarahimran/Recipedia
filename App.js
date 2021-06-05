@@ -8,14 +8,11 @@ import { createStackNavigator } from "@react-navigation/stack";
 import SignInScreen from "./screens/SignInScreen";
 import MyRecipeScreen from "./screens/MyRecipeScreen";
 import SignUpScreen from "./screens/SignUpScreen";
-import CustomMenu from "./screens/CustomMenu";
 import LandingPage from "./screens/LandingPage";
 import MyRecipeFeed from "./screens/MyRecipeFeed";
 import SingleRecipeScreen from "./screens/SingleRecipeScreen";
 import mystore from "./src/store";
 import { Provider } from "react-redux";
-import { StatusBar } from "react-native";
-import { Platform } from "react-native";
 import SavedRecipesScreen from "./screens/SavedRecipesScreen";
 const Stack = createStackNavigator();
 

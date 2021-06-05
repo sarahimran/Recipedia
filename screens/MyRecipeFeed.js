@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View, StatusBar, SafeAreaView, Platform, Dimensions, ScrollView, TouchableOpacity, Image } from 'react-native';
+import { ActivityIndicator, StyleSheet, Text, View, StatusBar, SafeAreaView, Platform, Dimensions, ScrollView, TouchableOpacity, Image } from 'react-native';
 import MaterialIcon from "react-native-vector-icons/MaterialIcons";
 import { useEffect, useState } from "react";
 import 'react-native-gesture-handler';
@@ -9,15 +9,18 @@ import { useSelector } from "react-redux";
 import API_URL from '../config';
 import Header from "../components/Header";
 import RecipeBox from "../components/RecipeBox";
+import { useIsFocused } from "@react-navigation/core";
 
 const MyRecipeFeed = ({ navigation }) => {
     const token = useSelector((state) => state.login);
     const { firstName } = useSelector((state) => state.info);
     const [data, setData] = useState([]);
+    const isFocused = useIsFocused();
+    const [isLoading, setLoading] = useState(true);
 
     useEffect(() => {
         getRecipesFromApi();
-    }, []);
+    }, [isFocused]);
 
     const getRecipesFromApi = async () => {
         try {
@@ -31,6 +34,7 @@ const MyRecipeFeed = ({ navigation }) => {
         } catch (err) {
             console.log(err);
         }
+        setLoading(false);
     };
 
     const x = () => {
@@ -44,6 +48,7 @@ const MyRecipeFeed = ({ navigation }) => {
                     rating={a.rating}
                     navigation={navigation}
                     id={a._id}
+                    img={a.image}
                 />
             );
         });
@@ -52,14 +57,14 @@ const MyRecipeFeed = ({ navigation }) => {
     return (
         <SafeAreaView style={styles.container}>
             <Header navigation={navigation} title={`${firstName}'s Feed`}></Header>
-            {data !== undefined ? <ScrollView>
-                <View style={{ marginTop: 10 }}>{x()}</View>
-            </ScrollView> : <Text
-                style={{ color: "#FF0000", alignSelf: "center", margin: "5%" }}
-            >
-                No recipes to show!
+            {isLoading ? <ActivityIndicator size="large" color="#0d5588" style={{marginTop: 20}}/> :
+                data !== undefined ? <ScrollView>
+                    <View style={{ marginTop: 10 }}>{x()}</View>
+                </ScrollView> : <Text
+                    style={{ color: "#FF0000", alignSelf: "center", margin: "5%" }}
+                >
+                    No recipes to show!
             </Text>}
-
         </SafeAreaView>
     );
 };

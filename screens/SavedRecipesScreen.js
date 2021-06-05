@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   Platform,
   ScrollView,
+  ActivityIndicator
 } from "react-native";
 import MaterialIcon from "react-native-vector-icons/MaterialIcons";
 import axios from "axios";
@@ -14,14 +15,17 @@ import RecipeBox from "../components/RecipeBox";
 import { useSelector } from "react-redux";
 import API_URL from '../config';
 import Header from "../components/Header";
+import { useIsFocused } from "@react-navigation/core";
 
 const SavedRecipesScreen = ({ navigation }) => {
   const [arr, setarr] = useState([]);
   const token = useSelector((state) => state.login);
+  const isFocused = useIsFocused();
+  const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
     getRecipesFromApi();
-  }, []);
+  }, [isFocused]);
 
   const getRecipesFromApi = async () => {
     try {
@@ -37,6 +41,7 @@ const SavedRecipesScreen = ({ navigation }) => {
     } catch (err) {
       console.log(err);
     }
+    setLoading(false);
   };
 
   const x = () => {
@@ -50,6 +55,7 @@ const SavedRecipesScreen = ({ navigation }) => {
           rating={a.rating}
           navigation={navigation}
           id={a._id}
+          img = {a.image}
         />
       );
     });
@@ -58,7 +64,8 @@ const SavedRecipesScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <Header navigation={navigation} title={"Saved Recipes"}></Header>
-      {arr !== undefined ? <ScrollView>
+      {isLoading ? <ActivityIndicator size="large" color="#0d5588" style={{marginTop: 20}}/> :
+      arr !== undefined ? <ScrollView>
         <View style={{ marginTop: 10 }}>{x()}</View>
       </ScrollView> : <Text
         style={{ color: "#FF0000", alignSelf: "center", margin: "5%" }}

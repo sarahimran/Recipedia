@@ -8,20 +8,41 @@ import {
   Platform,
   Pressable,
   TextInput,
+  Keyboard
 } from "react-native";
 import MaterialIcon from "react-native-vector-icons/MaterialIcons";
-import SimpleLineIcon from "react-native-vector-icons/SimpleLineIcons";
 import axios from "axios";
-import { useSelector } from "react-redux";
 import API_URL from '../config';
-import { Keyboard } from "react-native";
+import { setUserInfo } from "../src/action/index";
+import { useSelector , useDispatch } from "react-redux";
 
 function EditNameScreen({ route, navigation }) {
+  const dispatch = useDispatch();
   const token = useSelector((state) => state.login);
-  const [firstName, setFirstName] = useState(route.params.firstName);
-  const [lastName, setLastName] = useState(route.params.lastName);
+  const info = useSelector((state) => state.info);
+  const [firstName, setFirstName] = useState(info.firstName);
+  const [lastName, setLastName] = useState(info.lastName);
   const [shadow, setShadow] = useState(true);
   const [warning, setWarning] = useState("");
+
+  const changeState = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/user/profile`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      dispatch(
+        setUserInfo({
+          email: res.data.body.email,
+          firstName: res.data.body.firstName,
+          lastName: res.data.body.lastName,
+        })
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   const editProfileWithApi = async () => {
     try {
@@ -36,6 +57,7 @@ function EditNameScreen({ route, navigation }) {
           },
         });
       setWarning(res.data.header.message);
+      changeState();
     } catch (err) {
       console.log(err.message);
     }
@@ -165,7 +187,7 @@ const styles = StyleSheet.create({
   field: {
     fontSize: 15,
     fontWeight: "bold",
-    color: "orange",
+    color: "#eca728",
     width: 90,
     marginRight: 20
   },

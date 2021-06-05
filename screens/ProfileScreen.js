@@ -8,34 +8,14 @@ import axios from 'axios';
 import { useSelector } from "react-redux";
 import API_URL from '../config';
 import Header from "../components/Header";
+import { useIsFocused } from "@react-navigation/core";
 
 function ProfileScreen({ route, navigation }) {
   const token = useSelector((state) => state.login);
-  const [email, setEmail] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-
-  useEffect(() => {
-    getProfileFromApi();
-  }, []);
-
-  const getProfileFromApi = async () => {
-    try {
-      const res = await axios.get(`${API_URL}/user/profile`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-      setEmail(res.data.body.email);
-      setFirstName(res.data.body.firstName)
-      setLastName(res.data.body.lastName);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  const {firstName, lastName, email} = useSelector((state) => state.info);
 
   const editNameHandler = () => {
-    navigation.navigate("editName", { firstName, lastName });
+    navigation.navigate("editName");
   };
 
   const editPasswordHandler = () => {
@@ -151,7 +131,7 @@ const styles = StyleSheet.create({
   field: {
     fontSize: 15,
     fontWeight: "bold",
-    color: "orange",
+    color: "#eca728",
   },
   info: {
     fontSize: 15,

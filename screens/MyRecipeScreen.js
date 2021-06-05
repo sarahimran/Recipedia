@@ -7,8 +7,7 @@ import {
   SafeAreaView,
   Platform,
   ScrollView,
-  Image,
-  TouchableOpacity,
+  ActivityIndicator
 } from "react-native";
 import MaterialIcon from "react-native-vector-icons/MaterialIcons";
 import { useEffect } from "react";
@@ -19,14 +18,17 @@ import { Rating } from "react-native-elements";
 import API_URL from '../config';
 import Header from "../components/Header";
 import RecipeBox from "../components/RecipeBox";
+import { useIsFocused } from "@react-navigation/core";
 
 const MyRecipeScreen = ({ navigation }) => {
   const [arr, setarr] = useState([]);
   const token = useSelector((state) => state.login);
+  const isFocused = useIsFocused();
+  const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
     getRecipesFromApi();
-  }, []);
+  }, [isFocused]);
 
   const getRecipesFromApi = async () => {
     try {
@@ -40,6 +42,7 @@ const MyRecipeScreen = ({ navigation }) => {
     } catch (err) {
       console.log(err);
     }
+    setLoading(false);
   };
 
   const x = () => {
@@ -53,6 +56,7 @@ const MyRecipeScreen = ({ navigation }) => {
           rating={a.rating}
           navigation={navigation}
           id={a._id}
+          img={a.image}
         />
       );
     });
@@ -61,12 +65,13 @@ const MyRecipeScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <Header navigation={navigation} title={"My Recipes"}></Header>
-      {arr !== undefined ? <ScrollView>
-        <View style={{ marginTop: 10 }}>{x()}</View>
-      </ScrollView> : <Text
-        style={{ color: "#FF0000", alignSelf: "center", margin: "5%" }}
-      >
-        No recipes to show!
+      {isLoading ? <ActivityIndicator size="large" color="#0d5588" style={{marginTop: 20}}/> :
+        arr !== undefined ? <ScrollView>
+          <View style={{ marginTop: 10 }}>{x()}</View>
+        </ScrollView> : <Text
+          style={{ color: "#FF0000", alignSelf: "center", margin: "5%" }}
+        >
+          No recipes to show!
       </Text>}
     </SafeAreaView>
   );

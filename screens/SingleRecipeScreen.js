@@ -10,13 +10,15 @@ import {
   Text,
   ScrollView,
   Dimensions,
-  TouchableOpacity
+  TouchableOpacity,
+  ActivityIndicator
 } from 'react-native';
 import MaterialIcon from "react-native-vector-icons/MaterialIcons";
 import MaterialCommunityIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useSelector } from "react-redux";
 import API_URL from '../config';
 import { Rating } from 'react-native-elements';
+import { useIsFocused } from '@react-navigation/core';
 
 const height = Dimensions.get('window').height;
 const width = Dimensions.get('window').width;
@@ -28,10 +30,12 @@ const SingleRecipeScreen = ({ route, navigation }) => {
   const [recipeRating, setRecipeRating] = useState(0);
   const [favorite, setFavorite] = useState(false);
   const token = useSelector((state) => state.login);
+  const isFocused = useIsFocused();
+  const [isLoading, setLoading] = useState(true);
   
   useEffect(() => {
     getRecipeFromApi();
-  }, []);
+  }, [isFocused]);
 
   const rateRecipeAPI = async (r) => {
     try {
@@ -121,6 +125,7 @@ const SingleRecipeScreen = ({ route, navigation }) => {
     } catch (err) {
       console.log(err);
     }
+    setLoading(false);
   };
 
   return (
@@ -143,12 +148,13 @@ const SingleRecipeScreen = ({ route, navigation }) => {
           />
         </TouchableOpacity>
       </View>
+      {isLoading ? <ActivityIndicator size="large" color="#0d5588" style={{marginTop: 20}}/> :
       <ScrollView style={{ backgroundColor: 'white' }}>
         <Image
           style={
             (styles.image, { height: windowHeight / 3, width: undefined })
           }
-          source={require("../assets/pasta.jpg")}
+          source={{ uri: data.image }}
           resizeMode="cover"
         />
         <Text style={styles.title}>"{data.description}"</Text>
@@ -208,7 +214,7 @@ const SingleRecipeScreen = ({ route, navigation }) => {
           />}
         </View>
         <View style={{ height: 20 }} />
-      </ScrollView>
+      </ScrollView>}
     </SafeAreaView>
   );
 };
@@ -255,7 +261,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: 15,
     margin: 12,
-    color: '#888',
+    color: '#eca728',
   },
   text: {
     fontSize: 20,
@@ -285,24 +291,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   timeIcon: {
-    color: "#aaa",
-    fontWeight: "bold",
+    color: "#28c090",
     marginRight: 10
   },
   starIcon: {
-    color: "#aaa",
-    fontWeight: "bold",
+    color: "#28c090",
     marginRight: 10
   },
   timeText: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#aaa'
+    color: '#28c090'
   },
   starText: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#aaa'
+    color: '#28c090'
   },
   ingredientsHeading: {
     fontSize: 18,

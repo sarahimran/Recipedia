@@ -9,13 +9,13 @@ function RecipeBox(props) {
     return (
         <TouchableOpacity onPress={() => props.navigation.navigate("singleRecipe", { id: props.id })}>
             <View style={styles.box}>
-                <Image style={styles.image} source={img} />
+                <Image style={styles.image} source={ { uri: props.img } } />
                 <View style={styles.contentBox}>
                     <Text style={styles.heading}>{props.title}</Text>
                     <Text style={{ fontSize: 13, width: 200 }} numberOfLines={2}>{props.description} </Text>
                     <View style={styles.subcontentBox}>
                         <View style={styles.timeBox}>
-                            <Feather name="clock" style={{ fontSize: 20, color: '#0d5588' }} />
+                            <Feather name="clock" style={{ fontSize: 20, color: '#eca728' }} />
                             <Text>{" "}{props.duration}{" min"}</Text>
                         </View>
                         <Rating
@@ -55,8 +55,9 @@ const styles = StyleSheet.create({
         flexDirection: "column",
     },
     heading: {
-        fontSize: 17,
-        color: "#0d5588",
+        fontSize: 16,
+        color: "#28c090",
+        fontWeight: 'bold',
     },
     subcontentBox: {
         flexDirection: 'row',

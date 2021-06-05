@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
   field: {
     fontSize: 15,
     fontWeight: "bold",
-    color: "orange",
+    color: "#eca728",
     width: 90,
     marginRight: 20
   },
